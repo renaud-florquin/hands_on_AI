@@ -6,6 +6,6 @@ see https://web.umons.ac.be/fpms/fr/formations/intelligence-artificielle-hands-o
 
 ## Introduction (3 Oct. 2019)
 
-* [Intro 1](Intro1.ipynb): Using OpenCv library
-* [Intro 2](Intro2.ipynb): First simple NN classifier using NMIST data set using Tensorflow / Keras
+* [Intro 1](Défis\ en\ intelligence\ artificielle/Défi1\ -\ IA\ et\ analyse\ images/Intro1.ipynb): Using OpenCv library
+* [Intro 2](Défis\ en\ intelligence\ artificielle/Défi1\ -\ IA\ et\ analyse\ images/Intro2.ipynb): First simple NN classifier using NMIST data set using Tensorflow / Keras
 
