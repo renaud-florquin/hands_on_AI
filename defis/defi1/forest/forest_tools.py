@@ -49,8 +49,8 @@ def display_images_with_class(bad_classified_images, img_columns = 4):
     :param img_columns: number of columns to display
     """
     fig = plt.figure()
-    img_rows = (len(bad_classified) // img_columns) + 1
-    for i, (file_name, current_class, expected_class) in enumerate(bad_classified):
+    img_rows = (len(bad_classified_images) // img_columns) + 1
+    for i, (file_name, current_class, expected_class) in enumerate(bad_classified_images):
         ax = fig.add_subplot(img_rows, img_columns, 1 + i)
         img = tf.keras.preprocessing.image.load_img(file_name, target_size=(224,224))
         x = tf.keras.preprocessing.image.img_to_array(img)
