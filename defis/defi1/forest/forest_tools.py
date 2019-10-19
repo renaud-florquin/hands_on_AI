@@ -89,7 +89,7 @@ def display_samples(generator, category_map, img_rows = 2, img_columns = 4):
     :param img_rows: number of row to  display
     :param img_columns: number of columns to display
     """
-    x_step, y_step = train_generator.next()
+    x_step, y_step = generator.next()
     amount = img_rows * img_columns
     assert x_step.shape[0] >= amount, 'Not enough images per iteration'
     fig = plt.figure()
