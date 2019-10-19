@@ -1,14 +1,6 @@
-from collections import OrderedDict
-import json
-import time
-import glob
 import os
-import math
-import shutil
 import matplotlib.pyplot as plt
 import numpy as np
-
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 default_hyper_params = {
@@ -163,12 +155,12 @@ def display_metrics(history, metric_id, output_file):
     plt.savefig(output_file)  
 
 def classify_image(file_name, model, resolution=(224, 224)):
-	""" Print the class of an image (defined by file_name) using a trained model.
+    """ Print the class of an image (defined by file_name) using a trained model.
     :param file_name: the image's file
     :param model: the trained model
     :param resolution: image resolution
     :returns: the category index and the class probabilities vector
-	"""
+    """
     img = tf.keras.preprocessing.image.load_img(file_name, target_size=resolution)
     x = tf.keras.preprocessing.image.img_to_array(img)
     x = x / 255.0
@@ -179,9 +171,9 @@ def classify_image(file_name, model, resolution=(224, 224)):
     return np.argmax(class_probabilities), class_probabilities
 
 def scan_and_classify_image(model_file_name, from_dir, hyper_params):
-	"""
+    """
     :param hyper_params: the hyper parameters
-	"""
+    """
     index_to_class = {0: 'Fire', 1: 'No Fire', 2: 'Start Fire'}
     model = tf.keras.models.load_model(model_file_name)
 
