@@ -43,6 +43,49 @@ default_hyper_params = {
   ],
 }
 
+def display_images_with_class(bad_classified_images, img_columns = 4):
+    """ Display several images with current and expected class.
+    :param bad_classified_images: sequence of tuples (filename, current class, expected class)
+    :param img_columns: number of columns to display
+    """
+    fig = plt.figure()
+    img_rows = (len(bad_classified) // img_columns) + 1
+    for i, (file_name, current_class, expected_class) in enumerate(bad_classified):
+        ax = fig.add_subplot(img_rows, img_columns, 1 + i)
+        img = tf.keras.preprocessing.image.load_img(file_name, target_size=(224,224))
+        x = tf.keras.preprocessing.image.img_to_array(img)
+        x /= 255.0
+        plt.imshow(x)
+        plt.title('{}/{}'.format(current_class, expected_class))
+        plt.xticks([]) 
+        plt.yticks([])
+
+    plt.show()
+
+
+def display_samples(generator, category_map, img_rows = 2, img_columns = 4):
+    """ Display several images (img_rows x img_columns) with the category as title using the generator.
+    :param generator: the generator to extract a first set of images
+    :param category_map: the category map (index=>category id)
+    :param img_rows: number of row to  display
+    :param img_columns: number of columns to display
+    """
+    x_step, y_step = generator.next()
+    amount = img_rows * img_columns
+    assert x_step.shape[0] >= amount, 'Not enough images per iteration'
+    fig = plt.figure()
+
+    for i in range(amount):
+        ax = fig.add_subplot(img_rows, img_columns, 1 + i)
+        category_index = np.argmax(y_step[i])
+        plt.imshow(x_step[i])
+        plt.title(category_map[category_index])
+        plt.xticks([]) 
+        plt.yticks([])
+
+    plt.show()
+
+
 def create_generators(from_dir, hyper_params):
     """ Create a train and validation generators based on root dir (from_dir) and hyper_params. 
     :param from_dir: the directory with images (structure: train/<classes> + validation/<classes>)
@@ -81,28 +124,6 @@ def create_generators(from_dir, hyper_params):
                                                             target_size = hyper_params['resolution'])
     return train_generator, validation_generator
 
-
-def display_samples(generator, category_map, img_rows = 2, img_columns = 4):
-    """ Display several images (img_rows x img_columns) with the category as title using the generator.
-    :param generator: the generator to extract a first set of images
-    :param category_map: the category map (index=>category id)
-    :param img_rows: number of row to  display
-    :param img_columns: number of columns to display
-    """
-    x_step, y_step = generator.next()
-    amount = img_rows * img_columns
-    assert x_step.shape[0] >= amount, 'Not enough images per iteration'
-    fig = plt.figure()
-
-    for i in range(amount):
-        ax = fig.add_subplot(img_rows, img_columns, 1 + i)
-        category_index = np.argmax(y_step[i])
-        plt.imshow(x_step[i])
-        plt.title(category_map[category_index])
-        plt.xticks([]) 
-        plt.yticks([])
-
-    plt.show()
 
 def build_model(hyper_params):
     """ Based on hyper_params create a model using transfer learning (pre-defined model + classifier layers).
@@ -174,12 +195,19 @@ def scan_and_classify_image(model_file_name, from_dir, hyper_params):
     """
     :param hyper_params: the hyper parameters
     """
-    index_to_class = {0: 'Fire', 1: 'No Fire', 2: 'Start Fire'}
+    bad_classified = []
     model = tf.keras.models.load_model(model_file_name)
 
     for root, dirs, files in os.walk(from_dir):
             for file in files:
                 if file[-4:] in ['.jpg', '.png', 'jpeg']:
-                     img_class, class_probabilities = classify_image(os.path.join(root, file), model, resolution=hyper_params['resolution'])
-                     print('{img_class:12} - {file_name} ({class_probabilities})'.format(file_name=file_name, img_class=hyper_params['categories'][img_class], class_probabilities=class_probabilities))
+                    file_name = os.path.join(root, file)
+                    expected_category = root.split('/')[-1]
+                    img_class, class_probabilities = classify_image(file_name, model, resolution=hyper_params['resolution'])
+                    selected_category = hyper_params['categories'][img_class]
+                    print('{img_class:12} - {file_name} ({class_probabilities})'.format(file_name=file_name, img_class=selected_category, class_probabilities=class_probabilities))
+                    if expected_category != selected_category:
+                        bad_classified.append((file_name, selected_category, expected_category))
 
+    return bad_classified
+                        
