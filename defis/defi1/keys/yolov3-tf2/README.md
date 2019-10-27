@@ -36,14 +36,15 @@ python convert_csv_to_tfrecord.py --csv_filename keys_and_background/annotations
 ### Start the training from previous converted yolov3.weights and based on keys dataset 
 
 ```bash
-python train.py --batch_size 10 --dataset key_db/output/keys_000.tfrecord --classes ./data/keys.names --epochs 2 --mode fit --transfer fine_tune --weights ./checkpoints/yolov3.tf
+python train.py --batch_size 10 --dataset key_db/keys_000.tfrecord --classes ./data/keys.names --epochs 2 --mode fit --transfer fine_tune --weights ./checkpoints/yolov3.tf
 ```
 
 ## TODO and issues
 
 - [ ] Only one big TF record file. how to use several files ?
-- [ ] Split training and validation set ?
-
+- [ ] Split training and validation set
+- [ ] Monitor the loss during the training
+- [ ] Two steps training freeze + no freeze
 
 # YoloV3 Implemented in TensorFlow 2.0 (Original Readme)
 

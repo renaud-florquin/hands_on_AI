@@ -25,7 +25,7 @@ flags.DEFINE_string('img_dir', '', 'Root directory to images dataset.')
 flags.DEFINE_string('csv_filename', 'train', 'CSV annotations of the images.')
 flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
 
-SAMPLES_PER_FILES = 200
+SAMPLES_PER_FILES = 1000
 
 
 def int64_feature(value):
